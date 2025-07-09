@@ -5,6 +5,8 @@ git.ctypes.ctypes=function() local list={};for i, v in git.ctypes do table.inser
 git.ctypes.raw=function(response) return response;end
 git.ctypes.json=function(response) local http=game:GetService('HttpService');response=http:JSONDecode(response);return response;end
 git.ctypes.env=function(response) local env={};response=string.gsub(response,' //','//') for i, v in string.split(response,'\n') do local comment=string.find(v,'//');if comment then v=string.sub(v,0,comment-1) end;local name=string.split(v,'=')[1];if string.find(name,'//') or name=='' then continue end;local value=string.sub(v,string.len(name)+2,-1);env[name]=value end;return env;end
+git.ctypes.env_json=function(response) local http=game:GetService('HttpService');local response=git.ctypes.env(response);local items={};for i, v in response do local success=pcall(function() items[i]=http:JSONDecode(v);end);if not success then items[i]='Failed parsing JSON. <parse.err>'end;end;return items;end
+git.ctypes.json_env=git.ctypes.env_json
 
 -- Read Public Github files with <ENV>, <JSON> support. URL Example: https://github.com/<name>/<repo>/blob/<branch>/<file_name>. To get all Content Types, set <content_type> as 'ctypes'. // Made by @v21es.
 git.read_public_file=function(url:string,content_type:string?)
