@@ -1,5 +1,5 @@
 local git={}
-git.version='1.1'
+git.version='1.2'
 git.ctypes={}
 git.ctypes.ctypes=function() local list={};for i, v in git.ctypes do table.insert(list,i);end;return list;end
 git.ctypes.raw=function(response) return response;end
@@ -77,7 +77,7 @@ git.read_file=function(token,url,content_type:string?)
 	return ctype_response
 end
 
--- Set Github file content using a Fine-Grained Token. // Made by @v21es.
+-- Create/Change Github file content using a Token. URL Example: https://api.github.com/repos/<name>/<repo>/contents/<file_name>. // Made by @v21es.
 git.set_file=function(token,url,content)
 	local http=game:GetService('HttpService')
 	local encoded_content = git.base64.encode(content)
@@ -86,13 +86,15 @@ git.set_file=function(token,url,content)
 		["Authorization"]="token "..token,
 		["Accept"]="application/vnd.github.v3+json"
 	}
-	local preinfo = http:GetAsync(url,true,headers)
-	local preinfo=http:JSONDecode(preinfo)
+	local sha=''
+	local success, preinfo=pcall(function()
+		sha=http:JSONDecode(http:GetAsync(url,true,headers))['sha']
+	end)
 
 	local data={
 		message='update file via .lua',
 		content=encoded_content,
-		sha=preinfo.sha
+		sha=sha
 	}
 	local data=http:JSONEncode(data)
 
@@ -102,7 +104,6 @@ git.set_file=function(token,url,content)
 		Headers=headers,
 		Body=data
 	})
-	local response=http:JSONDecode(response)
 	return response
 end
 
