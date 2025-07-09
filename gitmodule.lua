@@ -1,4 +1,5 @@
 local git={}
+git.version='1.1'
 git.ctypes={}
 git.ctypes.ctypes=function() local list={};for i, v in git.ctypes do table.insert(list,i);end;return list;end
 git.ctypes.raw=function(response) return response;end
@@ -56,7 +57,7 @@ git.read_public_file=function(url:string,content_type:string?)
 	return ctype_response
 end
 
--- Read Private/Public Github files with <ENV>, <JSON> support. To get all Content Types, set <content_type> as 'ctypes'. // Made by @v21es.
+-- Read Private/Public Github files with <ENV>, <JSON> support. URL Example: https://api.github.com/repos/<name>/<repo>/contents/<file_name>. To get all Content Types, set <content_type> as 'ctypes'. // Made by @v21es.
 git.read_file=function(token,url,content_type:string?)
 	content_type=content_type or 'raw'
 	local http=game:GetService('HttpService')
