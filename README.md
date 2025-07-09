@@ -1,4 +1,4 @@
-# Roblox GitHub Module v1.1
+# Roblox GitHub Module v1.2
 
 ## Read File Content
 ![](assets/img1.png)
